@@ -1,10 +1,11 @@
 {
   "name": "module-federation-import-remote",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Allow Dynamic Imports of Remotely Exposed Modules Using Webpack Module Federation",
-  "main": "./src/index.ts",
+  "module": "dist/index.min.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rollup -c"
+    "build": "tsc && rollup -c"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
     "url": "https://github.com/alex-vukov/module-federation-import-remote/issues"
   },
   "homepage": "https://github.com/alex-vukov/module-federation-import-remote#readme",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.10",
