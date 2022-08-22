@@ -33,7 +33,7 @@ export const importRemote = async ({
 }: ImportRemoteOptions) => {
   if (!window[scope]) {
     //Get the remote entry point:
-    await loadEntryPoint(`${url}/{${remoteEntryFileName}}`, bustRemoteEntryCache);
+    await loadEntryPoint(`${url}/${remoteEntryFileName}`, bustRemoteEntryCache);
     if (!window[scope]) {
       return Promise.reject(new Error(`${scope} could not be located!`));
     }
