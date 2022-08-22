@@ -1,11 +1,11 @@
 {
   "name": "module-federation-import-remote",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Allow Dynamic Imports of Remotely Exposed Modules Using Webpack Module Federation",
   "module": "dist/index.min.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && rollup -c"
+    "build": "rimraf dist && tsc && rollup -c"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.78.1",
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.7.4"
