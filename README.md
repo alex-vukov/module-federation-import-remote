@@ -14,7 +14,7 @@ This library exposes an **importRemote()** function which will enable dynamic im
     name: "Foo",
     library: { type: "var", name: "Foo" },
     filename: "remoteEntry.js",
-      exposes: {
+    exposes: {
       "./Bar": "./src/Bar",
     },
   })
@@ -24,7 +24,7 @@ This library exposes an **importRemote()** function which will enable dynamic im
 
 3. Load the remotely exposed module in the host application using **importRemote()** and use it:
 ```
-  import { importRemote } from "react-module-federation-import-remote";
+  import { importRemote } from "module-federation-import-remote";
 
   // If it's a regular js module:
   importRemote({ url: "http://localhost:3001", scope: 'Foo', module: 'Bar' }).then(({/* list of Bar exports */}) => {
