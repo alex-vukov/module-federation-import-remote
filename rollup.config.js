@@ -17,7 +17,7 @@ const config = {
     babel({
       include: "src/**/*",
       exclude: "**/node_modules/**",
-      babelHelpers: "bundled",
+      babelHelpers: "runtime",
       extensions,
     }),
     terser(),
