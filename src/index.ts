@@ -17,7 +17,7 @@ const loadRemote = (
   bustRemoteEntryCache: ImportRemoteOptions["bustRemoteEntryCache"],
 ) =>
   new Promise((resolve, reject) => {
-    const timestamp = bustRemoteEntryCache ? `t=${new Date().getTime()}` : null;
+    const timestamp = bustRemoteEntryCache ? `?t=${new Date().getTime()}` : "";
 
     __webpack_require__.l(
       `${url}${timestamp}`,
