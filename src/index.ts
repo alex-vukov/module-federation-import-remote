@@ -11,13 +11,29 @@ export interface ImportRemoteOptions {
 
 const REMOTE_ENTRY_FILE = "remoteEntry.js";
 
-const loadEntryPoint = (
+const loadRemote = (
   url: ImportRemoteOptions["url"],
+  scope: ImportRemoteOptions["scope"],
   bustRemoteEntryCache: ImportRemoteOptions["bustRemoteEntryCache"],
 ) =>
-  new Promise<void>((resolve) => {
-    script.urlArgs(bustRemoteEntryCache ? `t=${new Date().getTime()}` : null); // Add a timestamp to bust the cached remote entry file
-    script(url, () => resolve());
+  new Promise<void>((resolve, reject) => {
+    const timestamp = bustRemoteEntryCache ? `t=${new Date().getTime()}` : null;
+
+    __webpack_require__.l(
+      `${url}${timestamp}`,
+      (event) => {
+        if (typeof window[scope] !== "undefined") {
+          return resolve(window[scope]);
+        }
+        const errorType = event?.type === "load" ? "missing" : event?.type;
+        const realSrc = event?.target?.src;
+        const error = new Error();
+        error.message = "Loading script failed.\n(" + errorType + ": " + realSrc + ")";
+        error.name = "ScriptExternalLoadError";
+        reject(error);
+      },
+      scope,
+    );
   });
 
 /* 
@@ -32,15 +48,16 @@ export const importRemote = async ({
   bustRemoteEntryCache = true,
 }: ImportRemoteOptions) => {
   if (!window[scope]) {
-    //Get the remote entry point:
-    await loadEntryPoint(`${url}/${remoteEntryFileName}`, bustRemoteEntryCache);
-    if (!window[scope]) {
-      return Promise.reject(new Error(`${scope} could not be located!`));
+    try {
+      // Load the remote:
+      await loadRemote(`${url}/${remoteEntryFileName}`, scope, bustRemoteEntryCache);
+      // Initializes the share scope. This fills it with known provided modules from this build and all remotes
+      await __webpack_init_sharing__("default");
+      // Initialize the container, it may provide shared modules:
+      await window[scope].init(__webpack_share_scopes__.default);
+    } catch (error) {
+      return Promise.reject(error);
     }
-    // Initializes the share scope. This fills it with known provided modules from this build and all remotes
-    await __webpack_init_sharing__("default");
-    // Initialize the container, it may provide shared modules
-    await window[scope].init(__webpack_share_scopes__.default);
   }
 
   const moduleFactory = await window[scope].get(module.startsWith("./") ? module : `./${module}`);
