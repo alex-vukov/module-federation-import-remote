@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-import script from "scriptjs";
 
 export interface ImportRemoteOptions {
   url: string;
