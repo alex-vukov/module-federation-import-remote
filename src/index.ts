@@ -16,7 +16,7 @@ const loadRemote = (
   scope: ImportRemoteOptions["scope"],
   bustRemoteEntryCache: ImportRemoteOptions["bustRemoteEntryCache"],
 ) =>
-  new Promise<void>((resolve, reject) => {
+  new Promise((resolve, reject) => {
     const timestamp = bustRemoteEntryCache ? `t=${new Date().getTime()}` : null;
 
     __webpack_require__.l(
@@ -40,13 +40,13 @@ const loadRemote = (
   Dynamically import a remote module using Webpack's loading mechanism:
   https://webpack.js.org/concepts/module-federation/
 */
-export const importRemote = async ({
+export const importRemote = async <T>({
   url,
   scope,
   module,
   remoteEntryFileName = REMOTE_ENTRY_FILE,
   bustRemoteEntryCache = true,
-}: ImportRemoteOptions) => {
+}: ImportRemoteOptions): Promise<T> => {
   if (!window[scope]) {
     try {
       // Load the remote:
