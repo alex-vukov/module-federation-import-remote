@@ -5,8 +5,8 @@ export interface ImportRemoteOptions {
   url: string;
   scope: string;
   module: string;
-  remoteEntryFileName?: string | undefined;
-  bustRemoteEntryCache?: boolean | undefined;
+  remoteEntryFileName?: string;
+  bustRemoteEntryCache?: boolean;
 }
 
 const REMOTE_ENTRY_FILE = "remoteEntry.js";
