@@ -15,19 +15,19 @@ const loadRemote = (
   scope: ImportRemoteOptions["scope"],
   bustRemoteEntryCache: ImportRemoteOptions["bustRemoteEntryCache"],
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise<void>((resolve, reject) => {
     const timestamp = bustRemoteEntryCache ? `?t=${new Date().getTime()}` : "";
 
     __webpack_require__.l(
       `${url}${timestamp}`,
       (event) => {
-        if (typeof window[scope] !== "undefined") {
-          return resolve(window[scope]);
+        if (event?.type === "load") {
+          // Script loaded successfully:
+          return resolve();
         }
-        const errorType = event?.type === "load" ? "missing" : event?.type;
         const realSrc = event?.target?.src;
         const error = new Error();
-        error.message = "Loading script failed.\n(" + errorType + ": " + realSrc + ")";
+        error.message = "Loading script failed.\n(missing: " + realSrc + ")";
         error.name = "ScriptExternalLoadError";
         reject(error);
       },
@@ -55,7 +55,8 @@ export const importRemote = async <T>({
       // Initialize the container, it may provide shared modules:
       await window[scope].init(__webpack_share_scopes__.default);
     } catch (error) {
-      return Promise.reject(error);
+      // Rethrow the error in case the user wants to handle it:
+      throw error;
     }
   }
 
