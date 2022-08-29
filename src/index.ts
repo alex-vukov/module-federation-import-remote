@@ -50,6 +50,11 @@ export const importRemote = async <T>({
     try {
       // Load the remote:
       await loadRemote(`${url}/${remoteEntryFileName}`, scope, bustRemoteEntryCache);
+      if (!window[scope]) {
+        throw new Error(
+          `Remote loaded succesfully but ${scope} could not be found! Verify that the name is correct in the Webpack configuration!`,
+        );
+      }
       // Initializes the share scope. This fills it with known provided modules from this build and all remotes
       await __webpack_init_sharing__("default");
       // Initialize the container, it may provide shared modules:
