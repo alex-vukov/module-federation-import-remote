@@ -2,11 +2,14 @@
 
 Allow a host application to dynamically import remotely exposed modules using Webpack Module Federation
 
-# Notes
+## Notes
 
 This library exports an **importRemote()** function which will enable dynamic imports of remotely exposed modules using the Module Federation plugin. It uses the method described in the official Webpack configuration under <a href="https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers" target="_blank">Dynamic Remote Containers</a>.
 
-# Example
+**Update**
+The source code of this library was reviewed by the creator of Module Federation and is now also added to the official utilities package <a href="https://www.npmjs.com/package/@module-federation/utilities">@module-federation/utilities.</a>
+
+## Example
 
 1. Expose a module in the remote application's Webpack configuration:
 
@@ -43,7 +46,7 @@ This library exports an **importRemote()** function which will enable dynamic im
   );
 ```
 
-# Additional Options
+## Additional Options
 
 Apart from **url**, **scope** and **module** you can also pass additional options to the **importRemote()** function:
 
