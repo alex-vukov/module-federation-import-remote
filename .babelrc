@@ -5,10 +5,11 @@
       "@babel/preset-env",
       {
         "corejs": 3,
-        "useBuiltIns": "entry",
-        "targets": "> 0.25%, not dead"
+        "useBuiltIns": "entry"
       }
     ]
   ],
-  "plugins": [["@babel/plugin-transform-runtime", { "useESModules": true }]]
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }

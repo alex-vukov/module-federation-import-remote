@@ -18,7 +18,6 @@ const config = {
       dir: "dist/cjs",
       format: "cjs",
       preserveModules: true,
-      exports: "auto",
       sourcemap: true,
     },
   ],
