@@ -23,8 +23,9 @@ const loadRemote = (
           return resolve();
         }
         const realSrc = event?.target?.src;
+        const eventType = event?.type;
         const error = new Error();
-        error.message = "Loading script failed.\n(missing: " + realSrc + ")";
+        error.message = `Loading script failed.\nMissing: ${realSrc}\nEvent type: ${eventType}`;
         error.name = "ScriptExternalLoadError";
         reject(error);
       },
