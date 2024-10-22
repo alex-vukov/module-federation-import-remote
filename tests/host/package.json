@@ -1,0 +1,9 @@
+{
+  "name": "host",
+  "version": "1.0.0",
+  "description": "Test Host",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  }
+}
