@@ -46,10 +46,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-# Tests
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/tests/dist/
