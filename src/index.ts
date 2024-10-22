@@ -1,28 +1,68 @@
-export interface ImportRemoteOptions {
-  url: string;
-  scope: string;
-  module: string;
-  remoteEntryFileName?: string;
-  bustRemoteEntryCache?: boolean;
-}
-
 const REMOTE_ENTRY_FILE = "remoteEntry.js";
 
-const loadRemote = (
-  url: ImportRemoteOptions["url"],
-  scope: ImportRemoteOptions["scope"],
-  bustRemoteEntryCache: ImportRemoteOptions["bustRemoteEntryCache"],
-) =>
+type CustomEvent = Event | { type: string; target: HTMLScriptElement };
+type EventHandler = (event: CustomEvent) => void;
+const inProgress: Record<string, Array<EventHandler>> = {};
+const dataPrefix = "host:";
+
+// Ported from __webpack_require__.l
+const injectScriptInHtml = (url: string, onDone: EventHandler, key: string) => {
+  if (inProgress[url]) {
+    inProgress[url].push(onDone);
+    return;
+  }
+
+  const allScripts = document.getElementsByTagName("script");
+  let script: HTMLScriptElement | undefined;
+
+  for (let i = 0; i < allScripts.length; i++) {
+    let currentScript = allScripts[i];
+    if (currentScript.getAttribute("src") == url || currentScript.getAttribute("data-mfir") == dataPrefix + key) {
+      script = currentScript;
+      break;
+    }
+  }
+
+  let shouldAttach = false;
+
+  if (!script) {
+    shouldAttach = true;
+    script = document.createElement("script");
+
+    script.setAttribute("data-mfir", dataPrefix + key);
+    script.src = url;
+  }
+  inProgress[url] = [onDone];
+
+  const onScriptComplete = (prev, event: CustomEvent) => {
+    // avoid mem leaks in IE.
+    script.onerror = script.onload = null;
+    clearTimeout(timeout);
+    const doneFns = inProgress[url];
+    delete inProgress[url];
+    script.parentNode?.removeChild(script);
+    doneFns?.forEach((fn) => fn(event));
+    if (prev) return prev(event);
+  };
+  const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: "timeout", target: script }), 120000);
+  script.onerror = onScriptComplete.bind(null, script.onerror) as OnErrorEventHandler;
+  script.onload = onScriptComplete.bind(null, script.onload);
+  if (shouldAttach) {
+    document.head.appendChild(script);
+  }
+};
+
+const loadRemote = (url: string, scope: string, bustRemoteEntryCache: boolean) =>
   new Promise<void>((resolve, reject) => {
     const timestamp = bustRemoteEntryCache ? `?t=${new Date().getTime()}` : "";
-    __webpack_require__.l(
+    injectScriptInHtml(
       `${url}${timestamp}`,
       (event) => {
         if (event?.type === "load") {
           // Script loaded successfully:
           return resolve();
         }
-        const realSrc = event?.target?.src;
+        const realSrc = (event?.target as HTMLScriptElement)?.src;
         const eventType = event?.type;
         const error = new Error();
         error.message = `Loading script failed.\nMissing: ${realSrc}\nEvent type: ${eventType}`;
@@ -52,6 +92,14 @@ const initContainer = async (containerScope: any) => {
     console.error(error);
   }
 };
+
+export interface ImportRemoteOptions {
+  url: string;
+  scope: string;
+  module: string;
+  remoteEntryFileName?: string;
+  bustRemoteEntryCache?: boolean;
+}
 
 /*
   Dynamically import a remote module using Webpack's loading mechanism:
