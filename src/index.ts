@@ -42,7 +42,9 @@ const injectScriptInHtml = (url: string, onDone: EventHandler, key: string) => {
     delete inProgress[url];
     script.parentNode?.removeChild(script);
     doneFns?.forEach((fn) => fn(event));
-    if (prev) return prev(event);
+    if (prev) {
+      return prev(event);
+    }
   };
   const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: "timeout", target: script }), 120000);
   script.onerror = onScriptComplete.bind(null, script.onerror) as OnErrorEventHandler;
