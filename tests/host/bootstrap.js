@@ -1,4 +1,4 @@
-import { importRemote } from "../../dist/esm";
+import { importRemote } from "../../dist/index.js";
 import { REMOTE_URL } from "../config";
 
 importRemote({ url: REMOTE_URL, scope: "remote", module: "index" }).then(({ writeToElement }) => {

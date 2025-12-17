@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
     "allowJs": true,
     "strict": true,
     "esModuleInterop": true,
+    "noImplicitOverride": true,
+    "module": "esnext",
+    "sourceMap": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "isolatedModules": true,
     "declarationMap": true,
     "noImplicitAny": false,
