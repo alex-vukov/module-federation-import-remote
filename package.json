@@ -1,6 +1,6 @@
 {
   "name": "module-federation-import-remote",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Allow Dynamic Imports of Remotely Exposed Modules Using Webpack Module Federation",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
